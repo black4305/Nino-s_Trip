@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeStory</title>
+
+    <!-- 파비콘 설정 -->
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon_32x32.png') }}" type="image/png">
+
+    <!-- PWA 설정 -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- 아이콘 설정 -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon_192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='icons/icon_512x512.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon_192x192.png') }}">
+    
+    <!-- CSS 파일 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Google Analytics 코드 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ED57X6YNW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-7ED57X6YNW');
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>NeStory</h1>
+
+        <!-- 햄버거 메뉴 아이콘 -->
+        <div class="menu-icon" onclick="toggleMenu()">
+            ☰ <!-- 여기서 ☰는 햄버거 메뉴 아이콘을 의미하는 특수 문자입니다 -->
+        </div>
+        
+        <!-- 가로 배열된 탭 -->
+        <nav>
+            <ul class="tabs">
+                <li class="tab" onclick="showContent('event')">이달의 네쓰 Pick</li>
+                <li class="tab" onclick="showContent('crookey')">가족 여행</li>
+                <li class="tab" onclick="showContent('activity')">액티비티</li>
+                <li class="tab" onclick="showContent('cafe')">카페</li>
+                <li class="tab" onclick="showContent('kids-restaurant')">키즈식당</li>
+                <li class="tab" onclick="showContent('culture-center')">문화센터</li>
+                <li class="tab" onclick="showContent('contact')">문의</li>
+                <!-- <li class="tab" onclick="createShortcut()">즐겨찾기</li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <section id="event" class="content-section" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="event-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('event-table', 'event-search')">
+                🔍
+            </button>
+        </div>
+    
+        <div class="table-container">
+            <table id="event-table">
+                <thead>
+                    <tr>
+                        <th>지역</th>
+                        <th>행사명</th>
+                        <th>기간</th>
+                        <th>행사 소개</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in event_data %}
+                    <tr>
+                        <td data-label="지역">{{ event.지역 }}</td>
+                        <td data-label="행사명">{{ event.행사명 }}</td>
+                        <td data-label="기간">{{ event.기간 }}</td>
+                        <td data-label="행사 소개" class="pre-wrap">{{ event["행사 소개"] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <section id="crookey" class="content-section" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="trip-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('trip-table', 'trip-search')">
+                🔍
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="trip-table">
+                <thead>
+                    <tr>
+                        <th>지역</th>
+                        <th>장소</th>
+                        <th>알짜 팁</th>
+                        <th>나이</th>
+                        <th>가격</th>
+                        <th>실내/실외</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in nino_trip_data %}
+                    <tr>
+                        <td data-label="지역">{{ trip.지역 }}</td>
+                        <td data-label="장소"><a href="{{ trip.링크 }}" target="_blank">{{ trip.장소 }}</a></td>
+                        <td data-label="알짜 팁" class="pre-wrap">{{ trip["알짜 팁"] }}</td>
+                        <td data-label="나이">{{ trip.나이 or 'N/A' }}</td>
+                        <td data-label="가격">{{ trip.가격 or 'N/A' }}</td>
+                        <td data-label="실내/실외" class="pre-wrap">{{ trip["실내/실외"] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="activity" class="content-section">
+        <div class="search-container">
+            <input type="text" id="activity-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('activity-table', 'activity-search')">
+                🔍
+            </button>
+        </div>
+    
+        <div class="table-container">
+            <table id="activity-table">
+                <thead>
+                    <tr>
+                        <th>지역</th>
+                        <th>장소</th>
+                        <th>알짜 팁</th>
+                        <th>가격</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in activity_data %}
+                    <tr>
+                        <td data-label="지역">{{ activity.지역 }}</td>
+                        <td data-label="장소"><a href="{{ activity.링크 }}" target="_blank">{{ activity.장소 }}</a></td>
+                        <td data-label="알짜 팁" class="pre-wrap">{{ activity["알짜 팁"] or 'N/A' }}</td>
+                        <td data-label="가격">{{ activity["가격"] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="cafe" class="content-section" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="cafe-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('cafe-table', 'cafe-search')">
+                🔍
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="cafe-table">
+                <thead>
+                    <tr>
+                        <th>지역</th>
+                        <th>장소</th>
+                        <th>알짜 팁</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cafe in cafe_data %}
+                    <tr>
+                        <td data-label="지역">{{ cafe.지역 }}</td>
+                        <td data-label="장소"><a href="{{ cafe.링크 }}" target="_blank">{{ cafe.장소 }}</a></td>
+                        <td data-label="알짜 팁" class="pre-wrap">{{ cafe["알짜 팁"] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="kids-restaurant" class="content-section" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="kids-restaurant-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('kids-restaurant-table', 'kids-restaurant-search')">
+                🔍
+            </button>
+        </div>
+        <div class="table-container">
+            <table id="kids-restaurant-table">
+                <thead>
+                    <tr>
+                        <th>장소</th>
+                        <th>알짜 팁</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kids_restaurant in kids_restaurant_data %}
+                    <tr>
+                        <td data-label="장소">
+                            <a href="{{ kids_restaurant.링크 }}" target="_blank">{{ kids_restaurant.장소 }}</a>
+                        </td>
+                        <td data-label="알짜 팁" class="pre-wrap">{{ kids_restaurant["알짜 팁"] or "N/A" }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="culture-center" class="content-section" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="culture-center-search" class="search-input" placeholder="검색어를 입력하세요..." />
+            <button class="search-button" onclick="filterTableWithButton('culture-center-table', 'culture-center-search')">
+                🔍
+            </button>
+        </div>
+        <div class="table-container">
+            <table id="culture-center-table">
+                <thead>
+                    <tr>
+                        <th>장소</th>
+                        <th>알짜 팁</th>
+                        <th>나이</th>
+                        <th>종류</th>
+                        <th>가격</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for culture_center in culture_center_data %}
+                    <tr>
+                        <td data-label="장소">
+                            <a href="{{ culture_center.링크 }}" target="_blank">{{ culture_center.장소 }}</a>
+                        </td>
+                        <td data-label="알짜 팁" class="pre-wrap">{{ culture_center["알짜 팁"] }}</td>
+                        <td data-label="나이">{{ culture_center.나이 }}</td>
+                        <td data-label="종류">{{ culture_center.종류 }}</td>
+                        <td data-label="가격">{{ culture_center.가격 }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 문의 섹션 -->
+    <section id="contact" class="content-section" style="display: none;">
+        <form id="inquiryForm">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+        
+            <label for="message">문의 내용</label>
+            <textarea id="message" name="message" placeholder="문의 내용을 입력하세요" rows="10" required></textarea>
+        
+            <button type="submit">문의하기</button>
+        </form>
+        
+        <h2>문의 내역</h2>
+        <div id="inquiryList">
+            <!-- 문의 목록이 여기에 표시됩니다 -->
+        </div>
+    </section>
+
+    <!-- <footer>
+        <p>상호명 : 에비듀</p>
+        <p>대표이사 : 김준우</p>
+        <p>사업자등록번호 : 719-08-02864</p>
+    </footer> -->
+
+    
+    <script>
+        // 문의 폼 제출 처리
+        document.getElementById('inquiryForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+    
+            const data = {
+                name: document.getElementById('name').value,
+                message: document.getElementById('message').value
+            };
+    
+            try {
+                const response = await fetch('/api/inquiries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+    
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    document.getElementById('inquiryForm').reset();
+                } else {
+                    alert(result.error || '오류가 발생했습니다.');
+                }
+            } catch (error) {
+                alert('서버와 연결할 수 없습니다.');
+            }
+        });
+    </script>    
+
+    <!-- JavaScript 파일 연결 -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- Service Worker 등록 -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+        }).catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+        });
+    }
+    </script>
+</body>
+</html>
