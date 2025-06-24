@@ -1,66 +1,66 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+이 파일은 Claude Code (claude.ai/code)가 이 저장소에서 작업할 때 참고하는 가이드입니다.
 
-## Project Overview
+## 프로젝트 개요
 
-**Nino's Trip** is a Korean travel guide web application built with Flask that provides family-friendly location recommendations across multiple categories. The application serves as a PWA (Progressive Web App) called "NeStory".
+**Nino's Trip**은 Flask로 구축된 한국 여행 가이드 웹 애플리케이션으로, 여러 카테고리에 걸쳐 가족 친화적인 장소 추천을 제공합니다. 이 애플리케이션은 "NeStory"라는 PWA(Progressive Web App)로 서비스됩니다.
 
-## Technology Stack
+## 기술 스택
 
-- **Backend**: Flask (Python web framework)
-- **Database**: Multiple SQLite databases for different content categories
-- **Frontend**: Vanilla JavaScript with HTML/CSS (no build process)
-- **Deployment**: Configured for Vercel deployment
+- **백엔드**: Flask (Python 웹 프레임워크)
+- **데이터베이스**: 다양한 콘텐츠 카테고리별 SQLite 데이터베이스
+- **프론트엔드**: 바닐라 JavaScript와 HTML/CSS (빌드 프로세스 없음)
+- **배포**: Vercel 배포 구성
 
-## Development Commands
+## 개발 명령어
 
-### Local Development
+### 로컬 개발
 ```bash
 python app.py
 ```
-Runs the Flask development server on localhost:5000
+Flask 개발 서버를 localhost:5000에서 실행
 
-### Deployment
-The project is configured for Vercel deployment with:
-- `vercel.json` - Vercel configuration
-- Simplified `requirements.txt` with only Flask dependency
+### 배포
+Vercel 배포를 위한 프로젝트 구성:
+- `vercel.json` - Vercel 구성 파일
+- `requirements.txt` - Flask 종속성만 포함하도록 최적화
 
-## Database Architecture
+## 데이터베이스 구조
 
-The application uses multiple SQLite databases in the `/data` directory:
-- `event.db` - Monthly events and activities
-- `nino-trip.db` - Family trip recommendations  
-- `forest.db` - Forest/nature locations
-- `cafe.db` - Cafe recommendations
-- `kids_restaurant.db` - Kid-friendly restaurants
-- `culture_center.db` - Cultural centers and activities
-- `activity.db` - Various activities
-- `db.sqlite3` - Main database for user inquiries
+애플리케이션은 `/data` 디렉토리에 여러 SQLite 데이터베이스를 사용:
+- `event.db` - 월별 이벤트 및 활동
+- `nino-trip.db` - 가족 여행 추천
+- `forest.db` - 숲/자연 장소
+- `cafe.db` - 카페 추천
+- `kids_restaurant.db` - 아이 친화적인 레스토랑
+- `culture_center.db` - 문화센터 및 활동
+- `activity.db` - 다양한 활동
+- `db.sqlite3` - 사용자 문의 메인 데이터베이스
 
-## Application Structure
+## 애플리케이션 구조
 
-### Main Files
-- `app.py` - Flask application with route handlers and database functions
-- `templates/index.html` - Main application interface with tabbed navigation
-- `templates/admin.html` - Administrative interface (password: 0819)
-- `static/script.js` - Client-side JavaScript for tab switching
-- `static/style.css` - Dark theme responsive styling
+### 주요 파일
+- `app.py` - 라우트 핸들러와 데이터베이스 함수가 있는 Flask 애플리케이션
+- `templates/index.html` - 탭 네비게이션이 있는 메인 애플리케이션 인터페이스
+- `templates/admin.html` - 관리자 인터페이스 (비밀번호: 0819)
+- `static/script.js` - 탭 전환용 클라이언트 사이드 JavaScript
+- `static/style.css` - 다크 테마 반응형 스타일링
 
-### Key Features
-- Multi-category travel guide with tabbed interface
-- Admin panel for managing user inquiries
-- REST API endpoints for inquiry management
-- PWA capabilities with offline support
-- Google Analytics integration
+### 주요 기능
+- 탭 인터페이스를 통한 다중 카테고리 여행 가이드
+- 사용자 문의 관리를 위한 관리자 패널
+- 문의 관리를 위한 REST API 엔드포인트
+- 오프라인 지원이 포함된 PWA 기능
+- Google Analytics 통합
 
-### API Endpoints
-- `POST /api/inquiries` - Submit new inquiry
-- `GET /api/inquiries` - Get all inquiries
-- `PATCH /api/inquiries/<id>` - Update inquiry response
-- `DELETE /api/inquiries/<id>` - Delete inquiry
-- `GET/POST /admin` - Admin authentication and interface
+### API 엔드포인트
+- `POST /api/inquiries` - 새 문의 제출
+- `GET /api/inquiries` - 모든 문의 조회
+- `PATCH /api/inquiries/<id>` - 문의 응답 업데이트
+- `DELETE /api/inquiries/<id>` - 문의 삭제
+- `GET/POST /admin` - 관리자 인증 및 인터페이스
 
-## Data Processing
+## 데이터 처리
 
-Database functions include content formatting (converting dash-separated items to line breaks) before rendering. Each category has its own data retrieval function that formats content appropriately for display.
+데이터베이스 함수는 렌더링 전 콘텐츠 포맷팅(대시로 구분된 항목을 줄바꿈으로 변환)을 포함합니다. 각 카테고리는 디스플레이에 적합하게 콘텐츠를 포맷팅하는 자체 데이터 검색 함수를 가지고 있습니다.
