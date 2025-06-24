@@ -23,8 +23,15 @@ Flask 개발 서버를 localhost:5000에서 실행
 
 ### 배포
 Vercel 배포를 위한 프로젝트 구성:
-- `vercel.json` - Vercel 구성 파일
+- `vercel.json` - Vercel 구성 파일 (Python 런타임, 정적 파일 설정)
+- `runtime.txt` - Python 3.9 버전 지정
 - `requirements.txt` - Flask 종속성만 포함하도록 최적화
+
+#### Vercel 배포 주의사항
+- `functions`와 `builds` 설정을 동시에 사용하면 충돌 발생
+- 정적 파일(CSS/JS) 로드를 위해 `@vercel/static` 빌드 설정 필요
+- 데이터베이스 파일들을 `includeFiles`에 포함해야 함
+- WSGI 애플리케이션 객체를 `application = app`으로 노출 필요
 
 ## 데이터베이스 구조
 
