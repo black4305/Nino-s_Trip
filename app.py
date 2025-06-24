@@ -220,5 +220,8 @@ def admin_page():
 def admin_inquiries():
     return render_template('admin.html')
 
+# Vercel을 위한 WSGI 애플리케이션 객체 노출
+application = app
+
 if __name__ == '__main__':
     app.run(debug=True)
